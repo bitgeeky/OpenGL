@@ -2,6 +2,7 @@
 #include <cmath>
 #include <GL/glut.h>
 #include "cannon.h"
+#include "basket.h"
 using namespace std;
 
 #define PI 3.141592653589
@@ -19,8 +20,11 @@ void handleMouseclick(int button, int state, int x, int y);
 
 // Global Variables
 float box_len = 4.0f;
-Cannon tank(0.0f,0.0f,0.1f); //Make a Cannon type object 
-Cannon bas(-0.5f,0.0f,0.2f); //Make a Cannon type object 
+Cannon tank(0.0f,-0.5f,0.1f); //Make a Cannon type object 
+Basket gr_basket(-0.5f,-0.5f,0.1f); //Make a green basket
+Basket red_basket(0.5f,-0.5f,0.1f); //Make a red basket
+float tank_velx = 0.02f; 
+float tank_vely = 0.0f; 
 
 int main(int argc, char **argv) {
 
@@ -66,13 +70,23 @@ void drawScene() {
 
     //Draw Cannon in Centre 
     glPushMatrix();
-    //cout << tank.getx();
-    //cout << tank.gety();
     glTranslatef(tank.getx(), tank.gety(), -3.0f);
     tank.draw();
     glPopMatrix();
-
+   
+    //Draw green basket
+    glPushMatrix();
+    glTranslatef(gr_basket.getx(), gr_basket.gety(), -3.0f);
+    gr_basket.draw();
+    glPopMatrix();
     
+    //Draw red basket
+    glPushMatrix();
+    glTranslatef(red_basket.getx(), red_basket.gety(), -3.0f);
+    red_basket.draw();
+    glPopMatrix();
+
+
     glPopMatrix();
     glutSwapBuffers();
 }
@@ -80,12 +94,11 @@ void drawScene() {
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
 void update(int value) {
-    tank.update(0.007f,0.007f); 
     glutTimerFunc(10, update, 0);
 }
 
 void drawBox(float len) {
-   
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glBegin(GL_QUADS);
     glVertex2f(-len / 2, -len / 2);
@@ -123,7 +136,12 @@ void handleKeypress1(unsigned char key, int x, int y) {
 }
 
 void handleKeypress2(int key, int x, int y) {
-
+    if (key == GLUT_KEY_LEFT){
+        tank.update(-tank_velx,tank_vely);
+    }
+    if (key == GLUT_KEY_RIGHT){
+        tank.update(tank_velx,tank_vely);
+    }
 }
 
 void handleMouseclick(int button, int state, int x, int y) {

@@ -1,13 +1,13 @@
-#ifndef CANNON_H_
-#define CANNON_H_
+#ifndef BASKET_H_
+#define BASKET_H_
 
-class Cannon {
+class Basket {
 
     public:
 
         float w;
         float cx, cy;
-        Cannon(float x, float y, float width){
+        Basket(float x, float y, float width){
 
             cx = x;
             cy = y;
@@ -17,7 +17,7 @@ class Cannon {
         void draw(){
             float x = cx, y = cy;
               glBegin(GL_QUADS);
-                glColor3f(0.0f, 0.0f, 0.1f); 
+                glColor3f(0.1f, 0.0f, 0.0f); 
 
                 glVertex3f(x+w, y+w, 0.0f); 
                 glVertex3f(x-w, y+w, 0.0f); 
