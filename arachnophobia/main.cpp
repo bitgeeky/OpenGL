@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <GL/glut.h>
+#include "cannon.h"
 using namespace std;
 
 #define PI 3.141592653589
@@ -18,7 +19,8 @@ void handleMouseclick(int button, int state, int x, int y);
 
 // Global Variables
 float box_len = 4.0f;
-
+Cannon tank(0.0f,0.0f,0.1f); //Make a Cannon type object 
+Cannon bas(-0.5f,0.0f,0.2f); //Make a Cannon type object 
 
 int main(int argc, char **argv) {
 
@@ -58,11 +60,19 @@ void drawScene() {
     glPushMatrix();
 
     // Draw Box
-    glTranslatef(0.0f, 0.0f, -5.0f);
-    glColor3f(1.0f, 0.0f, 0.0f);
-    drawBox(box_len);
-    
+    // glTranslatef(0.0f, 0.0f, -5.0f);
+    // glColor3f(1.0f, 0.0f, 0.0f);
+    // drawBox(box_len);
 
+    //Draw Cannon in Centre 
+    glPushMatrix();
+    //cout << tank.getx();
+    //cout << tank.gety();
+    glTranslatef(tank.getx(), tank.gety(), -3.0f);
+    tank.draw();
+    glPopMatrix();
+
+    
     glPopMatrix();
     glutSwapBuffers();
 }
@@ -70,7 +80,7 @@ void drawScene() {
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
 void update(int value) {
-    
+    tank.update(0.007f,0.007f); 
     glutTimerFunc(10, update, 0);
 }
 
