@@ -20,14 +20,15 @@ void handleMouseclick(int button, int state, int x, int y);
 
 // Global Variables
 float box_len = 4.0f;
-Cannon tank(0.0f,-0.5f,0.1f); //Make a Cannon type object 
-Basket gr_basket(-0.5f,-0.5f,0.1f,1); //Make a green basket
-Basket red_basket(0.5f,-0.5f,0.1f,0); //Make a red basket
-float tank_velx = 0.02f; 
+Cannon tank(0.0f,0.0f,0.15f); //Make a Cannon type object 
+Basket gr_basket(-0.5f,-0.9f,0.2f,1); //Make a green basket
+Basket red_basket(0.5f,-0.9f,0.2f,0); //Make a red basket
+float tank_velx = 0.01f; 
 float tank_vely = 0.0f;
 float basket_velx = 0.02f; 
 float basket_vely = 0.0f;
 int move_object = 0;
+float theta = 0.0f;
 
 int main(int argc, char **argv) {
 
@@ -66,27 +67,40 @@ void drawScene() {
     glLoadIdentity();
     glPushMatrix();
 
-    // Draw Box
-    // glTranslatef(0.0f, 0.0f, -5.0f);
-    // glColor3f(1.0f, 0.0f, 0.0f);
-    // drawBox(box_len);
+    //Draw Box
+    glTranslatef(0.0f, 0.0f, -5.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    drawBox(box_len);
 
     //Draw Cannon in Centre 
     glPushMatrix();
-    glTranslatef(tank.getx(), tank.gety(), -3.0f);
+
+    glTranslatef(tank.getx(), -1.8f, 0.0f);
+    glRotatef(theta, 0.0f, 0.0f, 1.0f);
     tank.draw();
     glPopMatrix();
-   
+
     //Draw green basket
     glPushMatrix();
-    glTranslatef(gr_basket.getx(), gr_basket.gety(), -3.0f);
+    glTranslatef(gr_basket.getx(), -0.9f, 0.0f);
     gr_basket.draw();
     glPopMatrix();
-    
+
     //Draw red basket
     glPushMatrix();
-    glTranslatef(red_basket.getx(), red_basket.gety(), -3.0f);
+    glTranslatef(red_basket.getx(), red_basket.gety(), 0.0f);
     red_basket.draw();
+    glPopMatrix();
+
+    //Draw a fixed Planck
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor3f(0.1f, 0.1f, 0.0f);
+    glVertex3f(2.0f, -1.92f, 0.0f);
+    glVertex3f(-2.0f, -1.92f, 0.0f);
+    glVertex3f(-2.0f, -2.0f, 0.0f);
+    glVertex3f(2.0f, -2.0f, 0.0f);
+    glEnd();
     glPopMatrix();
 
 
@@ -117,7 +131,7 @@ void initRendering() {
 
     glEnable(GL_DEPTH_TEST);        // Enable objects to be drawn ahead/behind one another
     glEnable(GL_COLOR_MATERIAL);    // Enable coloring
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);   // Setting a background color
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);   // Setting a background color
 }
 
 // Function called when the window is resized
@@ -147,22 +161,29 @@ void handleKeypress1(unsigned char key, int x, int y) {
 void handleKeypress2(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT){
         if(move_object==3)
-        tank.update(-tank_velx,tank_vely);
+            tank.update(-tank_velx,tank_vely);
         else if(move_object==1)
-        gr_basket.update(-basket_velx, basket_vely);
+            gr_basket.update(-basket_velx, basket_vely);
         else if(move_object==2)
-        red_basket.update(-basket_velx,basket_vely);
+            red_basket.update(-basket_velx,basket_vely);
     }
     if (key == GLUT_KEY_RIGHT){
         if(move_object==3)
-        tank.update(tank_velx,tank_vely);
+            tank.update(tank_velx,tank_vely);
         else if(move_object==1)
-        gr_basket.update(basket_velx, basket_vely);
+            gr_basket.update(basket_velx, basket_vely);
         else if(move_object==2)
-        red_basket.update(basket_velx,basket_vely);
+            red_basket.update(basket_velx,basket_vely);
     }
 }
 
 void handleMouseclick(int button, int state, int x, int y) {
+    if (state == GLUT_DOWN)
+    {
+        if (button == GLUT_LEFT_BUTTON)
+            theta += 15;
+        else if (button == GLUT_RIGHT_BUTTON)
+            theta -= 15;
+    }
 
 }
