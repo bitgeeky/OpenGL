@@ -7,18 +7,22 @@ class Basket {
 
         float w;
         float cx, cy;
-        Basket(float x, float y, float width){
+        int clr;
+        Basket(float x, float y, float width,int c){
 
             cx = x;
             cy = y;
             w = width;
+            clr = c;
         }
 
         void draw(){
             float x = cx, y = cy;
               glBegin(GL_QUADS);
+                if(clr)
+                glColor3f(0.0f, 0.1f, 0.0f); 
+                else
                 glColor3f(0.1f, 0.0f, 0.0f); 
-
                 glVertex3f(x+w, y+w, 0.0f); 
                 glVertex3f(x-w, y+w, 0.0f); 
                 glVertex3f(x-w, y-w, 0.0f); 

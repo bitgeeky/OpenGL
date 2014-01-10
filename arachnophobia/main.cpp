@@ -21,10 +21,13 @@ void handleMouseclick(int button, int state, int x, int y);
 // Global Variables
 float box_len = 4.0f;
 Cannon tank(0.0f,-0.5f,0.1f); //Make a Cannon type object 
-Basket gr_basket(-0.5f,-0.5f,0.1f); //Make a green basket
-Basket red_basket(0.5f,-0.5f,0.1f); //Make a red basket
+Basket gr_basket(-0.5f,-0.5f,0.1f,1); //Make a green basket
+Basket red_basket(0.5f,-0.5f,0.1f,0); //Make a red basket
 float tank_velx = 0.02f; 
-float tank_vely = 0.0f; 
+float tank_vely = 0.0f;
+float basket_velx = 0.02f; 
+float basket_vely = 0.0f;
+int move_object = 0;
 
 int main(int argc, char **argv) {
 
@@ -133,14 +136,30 @@ void handleKeypress1(unsigned char key, int x, int y) {
     if (key == 27) {
         exit(0);     // escape key is pressed
     }
+    if(key == 'r')
+        move_object = 2;
+    if(key == 'g') 
+        move_object = 1;
+    if(key == 'b') 
+        move_object = 3;
 }
 
 void handleKeypress2(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT){
+        if(move_object==3)
         tank.update(-tank_velx,tank_vely);
+        else if(move_object==1)
+        gr_basket.update(-basket_velx, basket_vely);
+        else if(move_object==2)
+        red_basket.update(-basket_velx,basket_vely);
     }
     if (key == GLUT_KEY_RIGHT){
+        if(move_object==3)
         tank.update(tank_velx,tank_vely);
+        else if(move_object==1)
+        gr_basket.update(basket_velx, basket_vely);
+        else if(move_object==2)
+        red_basket.update(basket_velx,basket_vely);
     }
 }
 
