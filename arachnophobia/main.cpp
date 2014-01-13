@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cmath>
+#include <vector>
 #include <GL/glut.h>
 #include "cannon.h"
 #include "basket.h"
@@ -11,6 +12,7 @@ using namespace std;
 
 // Function Declarations
 void drawScene();
+void addspider(int value);
 void update(int value);
 void drawBox(float len);
 void initRendering();
@@ -24,7 +26,7 @@ float box_len = 4.0f;
 Cannon tank(0.0f,0.0f,0.15f); //Make a Cannon type object 
 Basket gr_basket(-0.5f,0.0f,0.2f,1); //Make a green basket
 Basket red_basket(0.5f,0.0f,0.2f,0); //Make a red basket
-Spider testspider(0.0f,0.0f,0.2f,3); //just test
+vector<Spider> arr;
 
 float tank_velx = 0.01f; 
 float tank_vely = 0.0f;
@@ -32,7 +34,8 @@ float basket_velx = 0.02f;
 float basket_vely = 0.0f;
 int move_object = 0;
 float theta = 0.0f;
-
+float ball_vel = 0.01f;
+int num = 0;
 int main(int argc, char **argv) {
 
     // Initialize GLUT
@@ -58,6 +61,7 @@ int main(int argc, char **argv) {
     glutMouseFunc(handleMouseclick);
     glutReshapeFunc(handleResize);
     glutTimerFunc(10, update, 0);
+    glutTimerFunc(1000, addspider, 0);
 
     glutMainLoop();
     return 0;
@@ -95,12 +99,16 @@ void drawScene() {
     red_basket.draw();
     glPopMatrix();
 
-    // Draw Ball
-    glPushMatrix();
-    glTranslatef(testspider.getx(), testspider.gety(), 0.0f);
-    glColor3f(0.0f, 1.0f, 0.0f);
-    testspider.draw();
-    glPopMatrix();
+     //Draw Ball
+     if(num>0){
+     int i=0;
+     for(i=0;i<num;i++){
+     glPushMatrix();
+     glTranslatef(0.0f, arr[i].gety(), 0.0f);
+     arr[i].draw();
+     glPopMatrix();
+     }
+     }
 
     //Draw a fixed Planck
     glPushMatrix();
@@ -124,6 +132,16 @@ void update(int value) {
     glutTimerFunc(10, update, 0);
 }
 
+void addspider(int value) {
+    int i=0;
+    for(i=0;i<num;i+=1){
+        arr[i].update(arr[i].getx(),arr[i].gety()-ball_vel);
+    }
+    num+=1;
+    Spider s(0.0f,0.0f,0.2f,3);
+    arr.push_back(s);
+    glutTimerFunc(1000, addspider, 0);
+}
 void drawBox(float len) {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
