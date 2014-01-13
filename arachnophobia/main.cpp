@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include "cannon.h"
 #include "basket.h"
+#include "spider.h"
 using namespace std;
 
 #define PI 3.141592653589
@@ -21,8 +22,10 @@ void handleMouseclick(int button, int state, int x, int y);
 // Global Variables
 float box_len = 4.0f;
 Cannon tank(0.0f,0.0f,0.15f); //Make a Cannon type object 
-Basket gr_basket(-0.5f,-0.9f,0.2f,1); //Make a green basket
-Basket red_basket(0.5f,-0.9f,0.2f,0); //Make a red basket
+Basket gr_basket(-0.5f,0.0f,0.2f,1); //Make a green basket
+Basket red_basket(0.5f,0.0f,0.2f,0); //Make a red basket
+Spider testspider(0.0f,0.0f,0.2f,3); //just test
+
 float tank_velx = 0.01f; 
 float tank_vely = 0.0f;
 float basket_velx = 0.02f; 
@@ -82,14 +85,21 @@ void drawScene() {
 
     //Draw green basket
     glPushMatrix();
-    glTranslatef(gr_basket.getx(), -0.9f, 0.0f);
+    glTranslatef(gr_basket.getx(), -1.8f, 0.0f);
     gr_basket.draw();
     glPopMatrix();
 
     //Draw red basket
     glPushMatrix();
-    glTranslatef(red_basket.getx(), red_basket.gety(), 0.0f);
+    glTranslatef(red_basket.getx(), -1.8f, 0.0f);
     red_basket.draw();
+    glPopMatrix();
+
+    // Draw Ball
+    glPushMatrix();
+    glTranslatef(testspider.getx(), testspider.gety(), 0.0f);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    testspider.draw();
     glPopMatrix();
 
     //Draw a fixed Planck
