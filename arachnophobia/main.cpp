@@ -1,6 +1,8 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <stdlib.h>
+#include <time.h>
 #include <GL/glut.h>
 #include "cannon.h"
 #include "basket.h"
@@ -31,13 +33,14 @@ vector<Spider> arr;
 float tank_velx = 0.01f; 
 float tank_vely = 0.0f;
 float basket_velx = 0.02f; 
-float basket_vely = 0.0f;
+float basket_vely = 0.5f;
 int move_object = 0;
 float theta = 0.0f;
-float ball_vel = 0.01f;
+float ball_vel = 0.02f;
 int num = 0;
 int main(int argc, char **argv) {
 
+    srand (time(NULL));
     // Initialize GLUT
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
@@ -60,8 +63,8 @@ int main(int argc, char **argv) {
     glutSpecialFunc(handleKeypress2);
     glutMouseFunc(handleMouseclick);
     glutReshapeFunc(handleResize);
-    glutTimerFunc(10, update, 0);
-    glutTimerFunc(1000, addspider, 0);
+    glutTimerFunc(100, update, 0);
+    glutTimerFunc(2000, addspider, 0);
 
     glutMainLoop();
     return 0;
@@ -104,7 +107,7 @@ void drawScene() {
      int i=0;
      for(i=0;i<num;i++){
      glPushMatrix();
-     glTranslatef(0.0f, arr[i].gety(), 0.0f);
+     glTranslatef(arr[i].getx(), arr[i].gety(), 0.0f);
      arr[i].draw();
      glPopMatrix();
      }
@@ -129,18 +132,28 @@ void drawScene() {
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
 void update(int value) {
-    glutTimerFunc(10, update, 0);
+    if(num>0){
+        int i=0;
+    for(i=0;i<num;i+=1){
+        arr[i].update(0.0f,-ball_vel);
+    }
+    }
+    glutTimerFunc(100, update, 0);
 }
 
 void addspider(int value) {
-    int i=0;
-    for(i=0;i<num;i+=1){
-        arr[i].update(arr[i].getx(),arr[i].gety()-ball_vel);
-    }
+    int clr = rand() % 3 + 1; //generate random color
+    //generate random x co-ordinate
+    float ix = rand() % 7 + 1;
+    float fx = ix/10;
+    int flag = rand() % 2 + 1;
+    if(flag == 1)
+        fx *= -1;
+
     num+=1;
-    Spider s(0.0f,0.0f,0.2f,3);
-    arr.push_back(s);
-    glutTimerFunc(1000, addspider, 0);
+
+    arr.push_back(Spider (fx,0.0f,0.2f,clr));
+    glutTimerFunc(2000, addspider, 0);
 }
 void drawBox(float len) {
 
