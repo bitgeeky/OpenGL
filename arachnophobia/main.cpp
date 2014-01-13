@@ -144,7 +144,7 @@ void update(int value) {
 void addspider(int value) {
     int clr = rand() % 3 + 1; //generate random color
     //generate random x co-ordinate
-    float ix = rand() % 7 + 1;
+    float ix = rand() % 10 + 1;
     float fx = ix/10;
     int flag = rand() % 2 + 1;
     if(flag == 1)
@@ -152,7 +152,7 @@ void addspider(int value) {
 
     num+=1;
 
-    arr.push_back(Spider (fx,0.0f,0.2f,clr));
+    arr.push_back(Spider (fx,1.9f,0.1f,clr));
     glutTimerFunc(2000, addspider, 0);
 }
 void drawBox(float len) {
