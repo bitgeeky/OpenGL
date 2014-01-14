@@ -7,6 +7,7 @@
 #include "cannon.h"
 #include "basket.h"
 #include "spider.h"
+#include "laser.h"
 using namespace std;
 
 #define PI 3.141592653589
@@ -15,7 +16,7 @@ using namespace std;
 // Function Declarations
 void drawScene();
 void addspider(int value);
-void update(int value);
+void movespiders(int value);
 void drawBox(float len);
 void initRendering();
 void handleResize(int w, int h);
@@ -29,10 +30,10 @@ Cannon tank(0.0f,0.0f,0.15f); //Make a Cannon type object
 Basket gr_basket(-0.5f,0.0f,0.2f,1); //Make a green basket
 Basket red_basket(0.5f,0.0f,0.2f,0); //Make a red basket
 vector<Spider> arr;
-
-float tank_velx = 0.01f; 
+Laser beam(0.0f, 0.0f, 3.0f, 0.0f);
+float tank_velx = 0.04f; 
 float tank_vely = 0.0f;
-float basket_velx = 0.02f; 
+float basket_velx = 0.04f; 
 float basket_vely = 0.5f;
 int move_object = 0;
 float theta = 0.0f;
@@ -63,7 +64,7 @@ int main(int argc, char **argv) {
     glutSpecialFunc(handleKeypress2);
     glutMouseFunc(handleMouseclick);
     glutReshapeFunc(handleResize);
-    glutTimerFunc(100, update, 0);
+    glutTimerFunc(100, movespiders, 0);
     glutTimerFunc(2000, addspider, 0);
 
     glutMainLoop();
@@ -88,6 +89,13 @@ void drawScene() {
     glTranslatef(tank.getx(), -1.8f, 0.0f);
     glRotatef(theta, 0.0f, 0.0f, 1.0f);
     tank.draw();
+    glPopMatrix();
+
+    //Draw beam
+    glPushMatrix();
+    glTranslatef(tank.getx(), -1.8f, 0.0f);
+    glRotatef(theta, 0.0f, 0.0f, 1.0f);
+    beam.draw();
     glPopMatrix();
 
     //Draw green basket
@@ -131,14 +139,15 @@ void drawScene() {
 
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
-void update(int value) {
+void movespiders(int value) {
     if(num>0){
         int i=0;
     for(i=0;i<num;i+=1){
         arr[i].update(0.0f,-ball_vel);
     }
     }
-    glutTimerFunc(100, update, 0);
+    glutTimerFunc(100, movespiders, 0);
+     
 }
 
 void addspider(int value) {
