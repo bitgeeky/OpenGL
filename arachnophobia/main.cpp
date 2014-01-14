@@ -18,6 +18,7 @@ void drawScene();
 void addspider(int value);
 void movespiders(int value);
 void movebeams(int value);
+void reflectbeams(int value);
 void drawBox(float len);
 void initRendering();
 void handleResize(int w, int h);
@@ -70,6 +71,7 @@ int main(int argc, char **argv) {
     glutTimerFunc(100, movespiders, 0);
     glutTimerFunc(2000, addspider, 0);
     glutTimerFunc(100, movebeams, 0);
+    glutTimerFunc(10, reflectbeams, 0);
 
     glutMainLoop();
     return 0;
@@ -168,6 +170,30 @@ void movebeams(int value) {
     }
     }
     glutTimerFunc(100, movebeams, 0);
+     
+}
+
+void reflectbeams(int value) {
+    if(beamctr>0){
+        int i=0;
+    for(i=0;i<beamctr;i++){
+        
+           if(beam[i].gettankx()>0){
+                if(box_len/2 - beam[i].gettankx()+ beam[i].velx < 0.4f){
+                    beam[i].theta *= -1;
+                    beam[i].tankx -= 0.1f;
+                }
+           }
+            
+           if(beam[i].gettankx()<0){
+                if(abs(box_len/2) - abs(beam[i].gettankx()+ beam[i].velx) < 0.4f){
+                    beam[i].theta *= -1;
+                    beam[i].tankx += 0.1f;
+                }
+           }
+    }
+    }
+    glutTimerFunc(10, reflectbeams, 0);
      
 }
 
