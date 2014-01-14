@@ -30,7 +30,8 @@ Cannon tank(0.0f,0.0f,0.15f); //Make a Cannon type object
 Basket gr_basket(-0.5f,0.0f,0.2f,1); //Make a green basket
 Basket red_basket(0.5f,0.0f,0.2f,0); //Make a red basket
 vector<Spider> arr;
-Laser beam(0.0f, 0.0f, 3.0f, 0.0f);
+vector<Laser> beam;
+//Laser beam(0.0f, 0.0f, 3.0f, 0.0f);
 float tank_velx = 0.04f; 
 float tank_vely = 0.0f;
 float basket_velx = 0.04f; 
@@ -39,6 +40,7 @@ int move_object = 0;
 float theta = 0.0f;
 float ball_vel = 0.02f;
 int num = 0;
+int beamctr = 0;
 int main(int argc, char **argv) {
 
     srand (time(NULL));
@@ -92,11 +94,18 @@ void drawScene() {
     glPopMatrix();
 
     //Draw beam
+    if(beamctr>0){
+        int i=0;
+        for(i=0;i<beamctr;i++){
     glPushMatrix();
-    glTranslatef(tank.getx(), -1.8f, 0.0f);
-    glRotatef(theta, 0.0f, 0.0f, 1.0f);
-    beam.draw();
+    if(beam[i].istrans==0)
+    glTranslatef(beam[i].gettankx(), -1.8f, 0.0f);
+    //glTranslatef(beam[i].getx(), -1.8f, 0.0f);
+    glRotatef(beam[i].getangle(), 0.0f, 0.0f, 1.0f);
+    beam[i].draw();
     glPopMatrix();
+        }
+    }
 
     //Draw green basket
     glPushMatrix();
@@ -164,6 +173,11 @@ void addspider(int value) {
     arr.push_back(Spider (fx,1.9f,0.1f,clr));
     glutTimerFunc(2000, addspider, 0);
 }
+void addbeam(){
+    
+    beamctr += 1;
+    beam.push_back(Laser(0.0f,0.0f,3.0f,theta,tank.getx(),tank.gety()));
+}
 void drawBox(float len) {
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -206,6 +220,8 @@ void handleKeypress1(unsigned char key, int x, int y) {
         move_object = 1;
     if(key == 'b') 
         move_object = 3;
+    if(key == 32)
+        addbeam();
 }
 
 void handleKeypress2(int key, int x, int y) {

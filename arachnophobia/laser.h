@@ -9,12 +9,18 @@ class Laser {
         float w;
         float cx, cy;
         float theta;
-        Laser(float x, float y, float width, float t){
+        float tankx;
+        float tanky;
+        int istrans;
+        Laser(float x, float y, float width, float t, float tx, float ty){
 
             cx = x;
             cy = y;
             w = width;
             theta = t;
+            tanky = ty;
+            tankx = tx;
+            istrans = 0;
         }
 
         void draw(){
@@ -29,7 +35,11 @@ class Laser {
         }
 
         void update(float x, float y, float t){
-            cx += x;
+            istrans = 1;
+            if(theta>0)
+                cx += x;
+            else
+                cx -= x;
             cy += y;
             theta = t;
         }
@@ -37,6 +47,8 @@ class Laser {
         float getx(){ return cx;}
         float gety(){ return cy;}
         float getangle(){ return theta;}
+        float gettankx(){ return tankx;}
+        float gettanky(){ return tanky;}
 };
 
 #endif
