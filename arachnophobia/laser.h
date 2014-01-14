@@ -1,7 +1,9 @@
 #ifndef LASER_H_
 #define LASER_H_
+#define PI 3.141592653589
 #define DEG2RAD(deg) (deg * PI / 180)
 #include <math.h>
+#include <cmath>
 class Laser {
 
     public:
@@ -12,6 +14,7 @@ class Laser {
         float tankx;
         float tanky;
         int istrans;
+        float velx, vely;
         Laser(float x, float y, float width, float t, float tx, float ty){
 
             cx = x;
@@ -21,6 +24,8 @@ class Laser {
             tanky = ty;
             tankx = tx;
             istrans = 0;
+            velx = 0.1f;
+            vely = 0.1f;
         }
 
         void draw(){
@@ -34,14 +39,19 @@ class Laser {
 
         }
 
-        void update(float x, float y, float t){
+        void update(){
             istrans = 1;
-            if(theta>0)
-                cx += x;
-            else
-                cx -= x;
-            cy += y;
-            theta = t;
+            if(theta<0){
+                tankx += velx;
+                tanky += -velx/tan(3.14*(theta/180));
+            }
+            else if(theta == 0){
+                tanky += vely;
+            }
+            else{
+                tankx -= velx;
+                tanky += velx/tan(3.14*(theta/180));
+            }
         }
 
         float getx(){ return cx;}

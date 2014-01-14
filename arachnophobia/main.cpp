@@ -17,6 +17,7 @@ using namespace std;
 void drawScene();
 void addspider(int value);
 void movespiders(int value);
+void movebeams(int value);
 void drawBox(float len);
 void initRendering();
 void handleResize(int w, int h);
@@ -68,6 +69,7 @@ int main(int argc, char **argv) {
     glutReshapeFunc(handleResize);
     glutTimerFunc(100, movespiders, 0);
     glutTimerFunc(2000, addspider, 0);
+    glutTimerFunc(100, movebeams, 0);
 
     glutMainLoop();
     return 0;
@@ -98,8 +100,7 @@ void drawScene() {
         int i=0;
         for(i=0;i<beamctr;i++){
     glPushMatrix();
-    if(beam[i].istrans==0)
-    glTranslatef(beam[i].gettankx(), -1.8f, 0.0f);
+    glTranslatef(beam[i].gettankx(), beam[i].gettanky(), 0.0f);
     //glTranslatef(beam[i].getx(), -1.8f, 0.0f);
     glRotatef(beam[i].getangle(), 0.0f, 0.0f, 1.0f);
     beam[i].draw();
@@ -159,6 +160,17 @@ void movespiders(int value) {
      
 }
 
+void movebeams(int value) {
+    if(beamctr>0){
+        int i=0;
+    for(i=0;i<beamctr;i++){
+        beam[i].update();
+    }
+    }
+    glutTimerFunc(100, movebeams, 0);
+     
+}
+
 void addspider(int value) {
     int clr = rand() % 3 + 1; //generate random color
     //generate random x co-ordinate
@@ -176,7 +188,7 @@ void addspider(int value) {
 void addbeam(){
     
     beamctr += 1;
-    beam.push_back(Laser(0.0f,0.0f,3.0f,theta,tank.getx(),tank.gety()));
+    beam.push_back(Laser(0.0f,0.0f,3.0f,theta,tank.getx(), -1.8f));
 }
 void drawBox(float len) {
 
