@@ -24,8 +24,8 @@ class Laser {
             tanky = ty;
             tankx = tx;
             istrans = 0;
-            velx = 0.1f;
-            vely = 0.1f;
+            velx = 0.05f;
+            vely = 0.05f;
         }
 
         void draw(){
@@ -34,7 +34,7 @@ class Laser {
             glColor3f(1.0, 0.0, 0.0);
             glBegin(GL_LINES);
             glVertex3f(cx, cy, 0.0);
-            glVertex3f(cx, cy+0.4f, 0);
+            glVertex3f(cx, cy+0.5f, 0);
             glEnd();
 
         }

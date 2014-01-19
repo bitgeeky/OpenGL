@@ -1,3 +1,7 @@
+/*
+    Pop out laser beams and the spiders from 
+    array.
+*/
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -68,9 +72,9 @@ int main(int argc, char **argv) {
     glutSpecialFunc(handleKeypress2);
     glutMouseFunc(handleMouseclick);
     glutReshapeFunc(handleResize);
-    glutTimerFunc(100, movespiders, 0);
+    glutTimerFunc(50, movespiders, 0);
     glutTimerFunc(2000, addspider, 0);
-    glutTimerFunc(100, movebeams, 0);
+    glutTimerFunc(10, movebeams, 0);
     glutTimerFunc(10, reflectbeams, 0);
 
     glutMainLoop();
@@ -155,10 +159,25 @@ void movespiders(int value) {
     if(num>0){
         int i=0;
     for(i=0;i<num;i+=1){
+        if(arr[i].clr == 1){
+            // red spider coming 
+            if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
+                    arr.erase (arr.begin()+i);
+                    i-=1;
+                    num-=1;
+                    }
+            }
+        }
+        else if(arr[i].clr == 2){
+            // green spider coming
+
+        }
+        if(arr[i].gety()>(-1.8)){
         arr[i].update(0.0f,-ball_vel);
+        }
     }
     }
-    glutTimerFunc(100, movespiders, 0);
+    glutTimerFunc(50, movespiders, 0);
      
 }
 
@@ -169,7 +188,7 @@ void movebeams(int value) {
         beam[i].update();
     }
     }
-    glutTimerFunc(100, movebeams, 0);
+    glutTimerFunc(10, movebeams, 0);
      
 }
 
@@ -200,8 +219,8 @@ void reflectbeams(int value) {
 void addspider(int value) {
     int clr = rand() % 3 + 1; //generate random color
     //generate random x co-ordinate
-    float ix = rand() % 10 + 1;
-    float fx = ix/10;
+    float ix = rand() % 17 + 1;
+    float fx = ix/10;//convert to float and smaller value
     int flag = rand() % 2 + 1;
     if(flag == 1)
         fx *= -1;
@@ -214,7 +233,7 @@ void addspider(int value) {
 void addbeam(){
     
     beamctr += 1;
-    beam.push_back(Laser(0.0f,0.0f,3.0f,theta,tank.getx(), -1.8f));
+    beam.push_back(Laser(0.0f,0.0f,4.0f,theta,tank.getx(), -1.8f));
 }
 void drawBox(float len) {
 
@@ -285,9 +304,9 @@ void handleMouseclick(int button, int state, int x, int y) {
     if (state == GLUT_DOWN)
     {
         if (button == GLUT_LEFT_BUTTON)
-            theta += 15;
+            theta += 20;
         else if (button == GLUT_RIGHT_BUTTON)
-            theta -= 15;
+            theta -= 20;
     }
 
 }
