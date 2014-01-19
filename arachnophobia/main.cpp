@@ -40,7 +40,7 @@ vector<Laser> beam;
 //Laser beam(0.0f, 0.0f, 3.0f, 0.0f);
 float tank_velx = 0.04f; 
 float tank_vely = 0.0f;
-float basket_velx = 0.04f; 
+float basket_velx = 0.3f; 
 float basket_vely = 0.5f;
 int move_object = 0;
 float theta = 0.0f;
@@ -159,21 +159,32 @@ void movespiders(int value) {
     if(num>0){
         int i=0;
     for(i=0;i<num;i+=1){
+        int flag = 0;
         if(arr[i].clr == 1){
             // red spider coming 
             if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
                     arr.erase (arr.begin()+i);
                     i-=1;
                     num-=1;
+                    flag = 1;
                     }
             }
         }
         else if(arr[i].clr == 2){
             // green spider coming
+            if((arr[i].gety()<=(-1.8+gr_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(gr_basket.getx()+gr_basket.w))&&(arr[i].getx()>=(gr_basket.getx()-gr_basket.w))){
+                    arr.erase (arr.begin()+i);
+                    i-=1;
+                    num-=1;
+                    flag = 1; 
+                    }
+            }
 
         }
+        if(!flag){
         if(arr[i].gety()>(-1.8)){
         arr[i].update(0.0f,-ball_vel);
+        }
         }
     }
     }
