@@ -25,6 +25,7 @@ void movebeams(int value);
 void reflectbeams(int value);
 void firespider(int value);
 void removebeam(int value);
+void updatetime(int value);
 void drawBox(float len);
 void initRendering();
 void handleResize(int w, int h);
@@ -48,6 +49,8 @@ int move_object = 0;
 float theta = 0.0f;
 float ball_vel = 0.02f;
 int num = 0;
+int timectr = 1000;
+int score = 0;
 int beamctr = 0;
 int main(int argc, char **argv) {
 
@@ -80,6 +83,7 @@ int main(int argc, char **argv) {
     glutTimerFunc(10, reflectbeams, 0);
     glutTimerFunc(10, firespider, 0);
     glutTimerFunc(10, removebeam, 0);
+    glutTimerFunc(10, updatetime, 0);
 
     glutMainLoop();
     return 0;
@@ -210,6 +214,11 @@ void drawScene() {
 
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
+void updatetime(int val){
+    
+    timectr+=10;
+    glutTimerFunc(10, updatetime, 0);
+}
 void removebeam(int val){
     int i;
     for(i=0;i<beamctr;i++){
@@ -231,6 +240,8 @@ void firespider(int value){
                 if(beam[i].theta == 0){
                     if((beam[i].gettankx()<=(arr[j].getx()+0.14f))&&(beam[i].gettankx()>=(arr[j].getx()-0.14f))){
                         if((beam[i].gettanky()+0.5f>arr[j].gety()-0.14f)&&(beam[i].gettanky()+0.5f<arr[j].gety()+0.14f)){
+                            if(arr[j].clr == 3)
+                                score+=1;
                             arr.erase (arr.begin()+j);
                             j-=1;
                             num-=1;
@@ -242,6 +253,8 @@ void firespider(int value){
                     if(((beam[i].gettankx()+abs(0.5f*sin(DEG2RAD(beam[i].theta))))<=(arr[j].getx()+0.14f))&&((beam[i].gettankx()+abs(0.5*sin(DEG2RAD(beam[i].theta))))>=(arr[j].getx()-0.14f)))
                     { 
                         if((beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))>arr[j].gety()-0.14f)&&(beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))<arr[j].gety()+0.14f)){
+                            if(arr[j].clr == 3)
+                                score+=1;
                             arr.erase (arr.begin()+j);
                             j-=1;
                             num-=1;
@@ -252,6 +265,8 @@ void firespider(int value){
                     if(((beam[i].gettankx()-abs(0.5f*sin(DEG2RAD(beam[i].theta))))<=(arr[j].getx()+0.14f))&&((beam[i].gettankx()-abs(0.5*sin(DEG2RAD(beam[i].theta))))>=(arr[j].getx()-0.14f)))
                     { 
                         if((beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))>arr[j].gety()-0.14f)&&(beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))<arr[j].gety()+0.14f)){
+                            if(arr[j].clr == 3)
+                                score+=1;
                             arr.erase (arr.begin()+j);
                             j-=1;
                             num-=1;
@@ -277,6 +292,15 @@ void movespiders(int value) {
                     i-=1;
                     num-=1;
                     flag = 1;
+                    score += 1;
+                }
+                }
+                if((arr[i].gety()<=(-1.8+gr_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(gr_basket.getx()+gr_basket.w))&&(arr[i].getx()>=(gr_basket.getx()-gr_basket.w))){
+                    arr.erase (arr.begin()+i);
+                    i-=1;
+                    num-=1;
+                    flag = 1; 
+                    score -= 1;
                 }
                 }
             }
@@ -287,15 +311,40 @@ void movespiders(int value) {
                     i-=1;
                     num-=1;
                     flag = 1; 
+                    score += 1;
+                }
+                }
+                if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
+                    arr.erase (arr.begin()+i);
+                    i-=1;
+                    num-=1;
+                    flag = 1;
+                    score -= 1;
                 }
                 }
 
             }
             else if(arr[i].clr == 3){
-                // blue spider coming
-                if((arr[i].gety()<=(-1.8+tank.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(tank.getx()+tank.w))&&(arr[i].getx()>=(tank.getx()-tank.w))){
+                // blue spider coming 
+        /*        if((arr[i].gety()<=(-1.8+tank.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(tank.getx()+tank.w))&&(arr[i].getx()>=(tank.getx()-tank.w))){
 
                     // GAME OVER CONDITION
+                }
+                }*/
+                if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
+                    arr.erase (arr.begin()+i);
+                    i-=1;
+                    num-=1;
+                    flag = 1;
+                    score -= 1;
+                }
+                }
+                if((arr[i].gety()<=(-1.8+gr_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(gr_basket.getx()+gr_basket.w))&&(arr[i].getx()>=(gr_basket.getx()-gr_basket.w))){
+                    arr.erase (arr.begin()+i);
+                    i-=1;
+                    num-=1;
+                    flag = 1; 
+                    score -= 1;
                 }
                 }
 
@@ -362,6 +411,7 @@ void addspider(int value) {
     num+=1;
 
     arr.push_back(Spider (fx,1.9f,0.15f,clr));
+    cout << score << endl;
     glutTimerFunc(3000, addspider, 0);
 }
 void addbeam(){
@@ -411,8 +461,12 @@ void handleKeypress1(unsigned char key, int x, int y) {
         move_object = 1;
     if(key == 'b') 
         move_object = 3;
-    if(key == 32)
+    if(key == 32){
+        if(timectr>1000){
         addbeam();
+        timectr = 0;
+        }
+    }
 }
 
 void handleKeypress2(int key, int x, int y) {
