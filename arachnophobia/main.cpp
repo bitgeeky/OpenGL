@@ -355,6 +355,8 @@ void movespiders(int value) {
                 }
                 else
                 {
+                    if(arr[i].flag==0)
+                        score -= 5;
                     arr[i].flag = 1;
                 }
             }
