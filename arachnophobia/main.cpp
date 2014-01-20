@@ -461,12 +461,48 @@ void handleKeypress2(int key, int x, int y) {
         }
     }
     if (key == GLUT_KEY_RIGHT){
-        if(move_object==3)
+        if(move_object==3){
+            int flag = 1;
+            int i;
+            for(i=0;i<num;i++){
+                if((arr[i].flag==1)&&(arr[i].getx()>tank.getx())){
+                if((tank.getx()+tank_velx)>arr[i].getx()){
+                    flag = 0;
+                    break;
+                }
+                }
+            }
+            if(flag)
             tank.update(tank_velx,tank_vely);
-        else if(move_object==1)
+        }
+        else if(move_object==1){
+            int flag = 1;
+            int i;
+            for(i=0;i<num;i++){
+                if((arr[i].flag==1)&&(arr[i].getx()>gr_basket.getx())){
+                if((gr_basket.getx()+basket_velx)>arr[i].getx()){
+                    flag = 0;
+                    break;
+                }
+                }
+            }
+            if(flag)
             gr_basket.update(basket_velx, basket_vely);
-        else if(move_object==2)
+        }
+        else if(move_object==2){
+            int flag = 1;
+            int i;
+            for(i=0;i<num;i++){
+                if((arr[i].flag==1)&&(arr[i].getx()>red_basket.getx())){
+                if((red_basket.getx()+basket_velx)>arr[i].getx()){
+                    flag = 0;
+                    break;
+                }
+                }
+            }
+            if(flag)
             red_basket.update(basket_velx,basket_vely);
+        }
     }
 }
 
