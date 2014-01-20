@@ -40,7 +40,7 @@ Basket red_basket(0.5f,0.0f,0.2f,0); //Make a red basket
 vector<Spider> arr;
 vector<Laser> beam;
 //Laser beam(0.0f, 0.0f, 3.0f, 0.0f);
-float tank_velx = 0.04f; 
+float tank_velx = 0.06f; 
 float tank_vely = 0.0f;
 float basket_velx = 0.3f; 
 float basket_vely = 0.5f;
@@ -58,8 +58,8 @@ int main(int argc, char **argv) {
 
     int w = glutGet(GLUT_SCREEN_WIDTH);
     int h = glutGet(GLUT_SCREEN_HEIGHT);
-    int windowWidth = w * 2 / 3;
-    int windowHeight = h * 2 / 3;
+    int windowWidth = w ;
+    int windowHeight = h ;
 
     glutInitWindowSize(windowWidth, windowHeight);
     glutInitWindowPosition((w - windowWidth) / 2, (h - windowHeight) / 2);
@@ -75,7 +75,7 @@ int main(int argc, char **argv) {
     glutMouseFunc(handleMouseclick);
     glutReshapeFunc(handleResize);
     glutTimerFunc(50, movespiders, 0);
-    glutTimerFunc(2000, addspider, 0);
+    glutTimerFunc(3000, addspider, 0);
     glutTimerFunc(10, movebeams, 0);
     glutTimerFunc(10, reflectbeams, 0);
     glutTimerFunc(10, firespider, 0);
@@ -304,6 +304,10 @@ void movespiders(int value) {
                 if(arr[i].gety()>(-1.8)){
                     arr[i].update(0.0f,-ball_vel);
                 }
+                else
+                {
+                    arr[i].flag = 1;
+                }
             }
         }
     }
@@ -358,7 +362,7 @@ void addspider(int value) {
     num+=1;
 
     arr.push_back(Spider (fx,1.9f,0.15f,clr));
-    glutTimerFunc(2000, addspider, 0);
+    glutTimerFunc(3000, addspider, 0);
 }
 void addbeam(){
 
@@ -413,12 +417,48 @@ void handleKeypress1(unsigned char key, int x, int y) {
 
 void handleKeypress2(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT){
-        if(move_object==3)
+        if(move_object==3){
+            int flag = 1;
+            int i;
+            for(i=0;i<num;i++){
+                if((arr[i].flag==1)&&(arr[i].getx()<tank.getx())){
+                if((tank.getx()-tank_velx)<arr[i].getx()){
+                    flag = 0;
+                    break;
+                }
+                }
+            }
+            if(flag)
             tank.update(-tank_velx,tank_vely);
-        else if(move_object==1)
+        }
+        else if(move_object==1){
+            int flag = 1;
+            int i;
+            for(i=0;i<num;i++){
+                if((arr[i].flag==1)&&(arr[i].getx()<gr_basket.getx())){
+                if((gr_basket.getx()-basket_velx)<arr[i].getx()){
+                    flag = 0;
+                    break;
+                }
+                }
+            }
+            if(flag)
             gr_basket.update(-basket_velx, basket_vely);
-        else if(move_object==2)
+        }
+        else if(move_object==2){
+            int flag = 1;
+            int i;
+            for(i=0;i<num;i++){
+                if((arr[i].flag==1)&&(arr[i].getx()<red_basket.getx())){
+                if((red_basket.getx()-basket_velx)<arr[i].getx()){
+                    flag = 0;
+                    break;
+                }
+                }
+            }
+            if(flag)
             red_basket.update(-basket_velx,basket_vely);
+        }
     }
     if (key == GLUT_KEY_RIGHT){
         if(move_object==3)
@@ -433,10 +473,14 @@ void handleKeypress2(int key, int x, int y) {
 void handleMouseclick(int button, int state, int x, int y) {
     if (state == GLUT_DOWN)
     {
-        if (button == GLUT_LEFT_BUTTON)
-            theta += 20;
-        else if (button == GLUT_RIGHT_BUTTON)
-            theta -= 20;
+        if (button == GLUT_LEFT_BUTTON){
+            if(theta < 90)
+            theta += 10;
+        }
+        else if (button == GLUT_RIGHT_BUTTON){
+            if(theta > -90)
+            theta -= 10;
+        }
     }
 
 }

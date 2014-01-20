@@ -12,12 +12,14 @@ class Spider {
         float cx, cy;
         float rad;
         int clr;
+        int flag;
         Spider(float x, float y, float radius, int c){
 
             cx = x;
             cy = y;
             rad = radius;
-            clr = c; 
+            clr = c;
+            flag = 0;
         }
 
         void draw(){
