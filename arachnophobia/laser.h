@@ -24,7 +24,7 @@ class Laser {
             tanky = ty;
             tankx = tx;
             istrans = 0;
-            velx = 0.01f;
+            velx = 0.03f;
             vely = 0.03f;
         }
 

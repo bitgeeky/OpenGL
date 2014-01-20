@@ -214,9 +214,9 @@ void removebeam(int val){
     int i;
     for(i=0;i<beamctr;i++){
         if(beam[i].gettanky()>box_len/2){
-                    beam.erase (beam.begin()+i);
-                    i-=1;
-                    beamctr-=1;
+            beam.erase (beam.begin()+i);
+            i-=1;
+            beamctr-=1;
         }
     }
     glutTimerFunc(10, removebeam, 0);
@@ -225,25 +225,42 @@ void firespider(int value){
 
     int i,j;
     if((beamctr>0)&&(num>0)){
-    for(i=0;i<beamctr;i+=1){
-        for(j=0;j<num;j+=1){
-            
-            if(beam[i].theta == 0){
-                if((beam[i].gettankx()<=(arr[j].getx()+0.14f))&&(beam[i].gettankx()>=(arr[j].getx()-0.14f))){
-                    if(beam[i].gettanky()+0.5>arr[j].gety()){
-                    arr.erase (arr.begin()+j);
-                    j-=1;
-                    num-=1;
+        for(i=0;i<beamctr;i+=1){
+            for(j=0;j<num;j+=1){
+
+                if(beam[i].theta == 0){
+                    if((beam[i].gettankx()<=(arr[j].getx()+0.14f))&&(beam[i].gettankx()>=(arr[j].getx()-0.14f))){
+                        if((beam[i].gettanky()+0.5f>arr[j].gety()-0.14f)&&(beam[i].gettanky()+0.5f<arr[j].gety()+0.14f)){
+                            arr.erase (arr.begin()+j);
+                            j-=1;
+                            num-=1;
+                        }
                     }
                 }
-            }
-            else if(beam[i].theta > 0){
-            }
-            else{
-            
+                else if(beam[i].theta < 0){
+
+                    if(((beam[i].gettankx()+abs(0.5f*sin(DEG2RAD(beam[i].theta))))<=(arr[j].getx()+0.14f))&&((beam[i].gettankx()+abs(0.5*sin(DEG2RAD(beam[i].theta))))>=(arr[j].getx()-0.14f)))
+                    { 
+                        if((beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))>arr[j].gety()-0.14f)&&(beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))<arr[j].gety()+0.14f)){
+                            arr.erase (arr.begin()+j);
+                            j-=1;
+                            num-=1;
+                        }
+                    }
+                }
+                else{
+                    if(((beam[i].gettankx()-abs(0.5f*sin(DEG2RAD(beam[i].theta))))<=(arr[j].getx()+0.14f))&&((beam[i].gettankx()-abs(0.5*sin(DEG2RAD(beam[i].theta))))>=(arr[j].getx()-0.14f)))
+                    { 
+                        if((beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))>arr[j].gety()-0.14f)&&(beam[i].gettanky()+0.5f*cos(DEG2RAD(theta))<arr[j].gety()+0.14f)){
+                            arr.erase (arr.begin()+j);
+                            j-=1;
+                            num-=1;
+                        }
+                    }
+
+                }
             }
         }
-    }
     }
     glutTimerFunc(10, firespider, 0);
 }
