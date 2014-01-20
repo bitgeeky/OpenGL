@@ -22,18 +22,17 @@ class Spider {
 
         void draw(){
 
-            glBegin(GL_TRIANGLE_FAN);
             if(clr == 1)
                 glColor3f(0.1f, 0.0f, 0.0f);
             else if(clr == 2)
                 glColor3f(0.0f, 1.0f, 0.0f);
             else if(clr == 3)
                 glColor3f(0.0f, 0.0f, 1.0f);
+            glBegin(GL_TRIANGLE_FAN);
             for(int i=0 ; i<360 ; i++) {
-                glVertex2f(rad * cos(DEG2RAD(i)), rad * sin(DEG2RAD(i)));
+                glVertex2f((rad-0.06f) * cos(DEG2RAD(i)), rad * sin(DEG2RAD(i)));
             }
-            glEnd();	
-
+            glEnd();
         }
 
         void update(float x, float y){

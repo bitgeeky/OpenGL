@@ -1,7 +1,7 @@
 /*
-    Pop out laser beams and the spiders from 
-    array.
-*/
+   Pop out laser beams and the spiders from 
+   array.
+   */
 #include <iostream>
 #include <cmath>
 #include <vector>
@@ -23,6 +23,7 @@ void addspider(int value);
 void movespiders(int value);
 void movebeams(int value);
 void reflectbeams(int value);
+void firespider(int value);
 void drawBox(float len);
 void initRendering();
 void handleResize(int w, int h);
@@ -76,6 +77,7 @@ int main(int argc, char **argv) {
     glutTimerFunc(2000, addspider, 0);
     glutTimerFunc(10, movebeams, 0);
     glutTimerFunc(10, reflectbeams, 0);
+    glutTimerFunc(10, firespider, 0);
 
     glutMainLoop();
     return 0;
@@ -105,12 +107,12 @@ void drawScene() {
     if(beamctr>0){
         int i=0;
         for(i=0;i<beamctr;i++){
-    glPushMatrix();
-    glTranslatef(beam[i].gettankx(), beam[i].gettanky(), 0.0f);
-    //glTranslatef(beam[i].getx(), -1.8f, 0.0f);
-    glRotatef(beam[i].getangle(), 0.0f, 0.0f, 1.0f);
-    beam[i].draw();
-    glPopMatrix();
+            glPushMatrix();
+            glTranslatef(beam[i].gettankx(), beam[i].gettanky(), 0.0f);
+            //glTranslatef(beam[i].getx(), -1.8f, 0.0f);
+            glRotatef(beam[i].getangle(), 0.0f, 0.0f, 1.0f);
+            beam[i].draw();
+            glPopMatrix();
         }
     }
 
@@ -126,16 +128,46 @@ void drawScene() {
     red_basket.draw();
     glPopMatrix();
 
-     //Draw Ball
-     if(num>0){
-     int i=0;
-     for(i=0;i<num;i++){
-     glPushMatrix();
-     glTranslatef(arr[i].getx(), arr[i].gety(), 0.0f);
-     arr[i].draw();
-     glPopMatrix();
-     }
-     }
+    //Draw Ball
+    if(num>0){
+        int i=0;
+        for(i=0;i<num;i++){
+            glPushMatrix();
+            glTranslatef(arr[i].getx(), arr[i].gety(), 0.0f);
+            arr[i].draw();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.0f, 0.0f, 0.0);
+            glVertex3f(0.12f, 0.0f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.12f, 0.0f, 0.0);
+            glVertex3f(0.15f, 0.12f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.12f, 0.0f, 0.0);
+            glVertex3f(0.15f, -0.12f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.0f, 0.0f, 0.0);
+            glVertex3f(-0.12f, 0.0f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(-0.12f, 0.0f, 0.0);
+            glVertex3f(-0.15f, 0.12f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(-0.12f, 0.0f, 0.0);
+            glVertex3f(-0.15f, -0.12f, 0);
+            glEnd();
+            glPopMatrix();
+        }
+    }
 
     //Draw a fixed Planck
     glPushMatrix();
@@ -155,82 +187,109 @@ void drawScene() {
 
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
+
+void firespider(int value){
+
+    int i,j;
+    for(i=0;i<beamctr;i+=1){
+        for(j=0;j<num;j+=1){
+            if((beam[i].getx()<=(arr[j].getx()+arr[j].rad))&&(beam[i].getx()>=(arr[j].getx()-arr[j].rad))){
+                if(((arr[j].gety()-(beam[i].gety()+0.5f))<0.15f)&&(arr[j].gety()>beam[i].gety())){
+                    arr.erase (arr.begin()+j);
+                    j-=1;
+                    num-=1;
+                }
+            }
+        }
+    }
+    glutTimerFunc(10, firespider, 0);
+}
+
 void movespiders(int value) {
     if(num>0){
         int i=0;
-    for(i=0;i<num;i+=1){
-        int flag = 0;
-        if(arr[i].clr == 1){
-            // red spider coming 
-            if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
+        for(i=0;i<num;i+=1){
+            int flag = 0;
+            if(arr[i].clr == 1){
+                // red spider coming 
+                if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
                     arr.erase (arr.begin()+i);
                     i-=1;
                     num-=1;
                     flag = 1;
-                    }
+                }
+                }
             }
-        }
-        else if(arr[i].clr == 2){
-            // green spider coming
-            if((arr[i].gety()<=(-1.8+gr_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(gr_basket.getx()+gr_basket.w))&&(arr[i].getx()>=(gr_basket.getx()-gr_basket.w))){
+            else if(arr[i].clr == 2){
+                // green spider coming
+                if((arr[i].gety()<=(-1.8+gr_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(gr_basket.getx()+gr_basket.w))&&(arr[i].getx()>=(gr_basket.getx()-gr_basket.w))){
                     arr.erase (arr.begin()+i);
                     i-=1;
                     num-=1;
                     flag = 1; 
-                    }
-            }
+                }
+                }
 
+            }
+            else if(arr[i].clr == 3){
+                // blue spider coming
+                if((arr[i].gety()<=(-1.8+tank.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(tank.getx()+tank.w))&&(arr[i].getx()>=(tank.getx()-tank.w))){
+
+                    // GAME OVER CONDITION
+                }
+                }
+
+            }
+            if(!flag){
+                if(arr[i].gety()>(-1.8)){
+                    arr[i].update(0.0f,-ball_vel);
+                }
+            }
         }
-        if(!flag){
-        if(arr[i].gety()>(-1.8)){
-        arr[i].update(0.0f,-ball_vel);
-        }
-        }
-    }
     }
     glutTimerFunc(50, movespiders, 0);
-     
+
 }
 
 void movebeams(int value) {
     if(beamctr>0){
         int i=0;
-    for(i=0;i<beamctr;i++){
-        beam[i].update();
-    }
+        for(i=0;i<beamctr;i++){
+            beam[i].update();
+        }
     }
     glutTimerFunc(10, movebeams, 0);
-     
+
 }
 
 void reflectbeams(int value) {
     if(beamctr>0){
         int i=0;
-    for(i=0;i<beamctr;i++){
-        
-           if(beam[i].gettankx()>0){
+        for(i=0;i<beamctr;i++){
+
+            if(beam[i].gettankx()>0){
                 if(box_len/2 - beam[i].gettankx()+ beam[i].velx < 0.4f){
                     beam[i].theta *= -1;
                     beam[i].tankx -= 0.1f;
                 }
-           }
-            
-           if(beam[i].gettankx()<0){
+            }
+
+            if(beam[i].gettankx()<0){
                 if(abs(box_len/2) - abs(beam[i].gettankx()+ beam[i].velx) < 0.4f){
                     beam[i].theta *= -1;
                     beam[i].tankx += 0.1f;
                 }
-           }
-    }
+            }
+        }
     }
     glutTimerFunc(10, reflectbeams, 0);
-     
+
 }
 
 void addspider(int value) {
     int clr = rand() % 3 + 1; //generate random color
     //generate random x co-ordinate
-    float ix = rand() % 17 + 1;
+    float ix = rand() % 18 + 1;
     float fx = ix/10;//convert to float and smaller value
     int flag = rand() % 2 + 1;
     if(flag == 1)
@@ -238,11 +297,11 @@ void addspider(int value) {
 
     num+=1;
 
-    arr.push_back(Spider (fx,1.9f,0.1f,clr));
+    arr.push_back(Spider (fx,1.9f,0.15f,clr));
     glutTimerFunc(2000, addspider, 0);
 }
 void addbeam(){
-    
+
     beamctr += 1;
     beam.push_back(Laser(0.0f,0.0f,4.0f,theta,tank.getx(), -1.8f));
 }

@@ -24,8 +24,8 @@ class Laser {
             tanky = ty;
             tankx = tx;
             istrans = 0;
-            velx = 0.05f;
-            vely = 0.05f;
+            velx = 0.01f;
+            vely = 0.03f;
         }
 
         void draw(){
