@@ -33,7 +33,7 @@ void handleMouseclick(int button, int state, int x, int y);
 
 // Global Variables
 float box_len = 4.0f;
-Cannon tank(0.0f,0.0f,0.15f); //Make a Cannon type object 
+Cannon tank(0.0f,0.0f,0.09f); //Make a Cannon type object 
 Basket gr_basket(-0.5f,0.0f,0.2f,1); //Make a green basket
 Basket red_basket(0.5f,0.0f,0.2f,0); //Make a red basket
 vector<Spider> arr;
@@ -101,6 +101,27 @@ void drawScene() {
     glTranslatef(tank.getx(), -1.8f, 0.0f);
     glRotatef(theta, 0.0f, 0.0f, 1.0f);
     tank.draw();
+    glColor3f(0.0f, 0.0f, 0.1f);        
+    glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.0f, 0.0f, 0.0);
+            glVertex3f(0.12f, 0.0f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.12f, -0.12f, 0.0);
+            glVertex3f(0.12f, 0.12f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(0.0f, 0.0f, 0.0);
+            glVertex3f(-0.12f, 0.0f, 0);
+            glEnd();
+            glBegin(GL_LINES);
+            glLineWidth(3.0f);
+            glVertex3f(-0.12f, -0.12f, 0.0);
+            glVertex3f(-0.12f, 0.12f, 0);
+            glEnd();
     glPopMatrix();
 
     //Draw beam
