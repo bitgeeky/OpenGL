@@ -4,6 +4,8 @@
    */
 #include <iostream>
 #include <cmath>
+#include <stdio.h>
+#include <stdarg.h>
 #include <vector>
 #include <stdlib.h>
 #include <time.h>
@@ -16,7 +18,6 @@ using namespace std;
 
 #define PI 3.141592653589
 #define DEG2RAD(deg) (deg * PI / 180)
-
 // Function Declarations
 void drawScene();
 void addspider(int value);
@@ -32,6 +33,27 @@ void handleResize(int w, int h);
 void handleKeypress1(unsigned char key, int x, int y);
 void handleKeypress2(int key, int x, int y);
 void handleMouseclick(int button, int state, int x, int y);
+void scoredisplay (int posx, int posy, int posz, int space_char, int scorevar)
+{
+    int j=0,p,k;
+    GLvoid *font_style1 = GLUT_BITMAP_TIMES_ROMAN_24;
+
+    p = scorevar;
+    j = 0;
+    k = 0; 
+    while(p > 9)
+    {
+        k = p % 10;
+        glRasterPos3f ((posx-(j*space_char)),posy, posz);    
+        glutBitmapCharacter(font_style1,48+k);
+        j++;
+        p /= 10;
+    }
+    glRasterPos3f ((posx-(j*space_char)), posy, posz);    
+    glutBitmapCharacter(font_style1,48+p);
+
+}
+
 
 // Global Variables
 float box_len = 4.0f;
@@ -84,7 +106,6 @@ int main(int argc, char **argv) {
     glutTimerFunc(10, firespider, 0);
     glutTimerFunc(10, removebeam, 0);
     glutTimerFunc(10, updatetime, 0);
-
     glutMainLoop();
     return 0;
 }
@@ -100,6 +121,12 @@ void drawScene() {
     glTranslatef(0.0f, 0.0f, -5.0f);
     glColor3f(1.0f, 0.0f, 0.0f);
     drawBox(box_len);
+
+    glPushMatrix();
+    if(score>0)
+        glColor3f(0.0f, 1.0f, 0.0f);
+    scoredisplay(0.0,0.0,0.0,0.0,abs(score));
+    glPopMatrix();
 
     //Draw Cannon in Centre 
     glPushMatrix();
@@ -215,7 +242,7 @@ void drawScene() {
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
 void updatetime(int val){
-    
+
     timectr+=10;
     glutTimerFunc(10, updatetime, 0);
 }
@@ -326,9 +353,9 @@ void movespiders(int value) {
             }
             else if(arr[i].clr == 3){
                 // blue spider coming 
-        /*        if((arr[i].gety()<=(-1.8+tank.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(tank.getx()+tank.w))&&(arr[i].getx()>=(tank.getx()-tank.w))){
+                /*        if((arr[i].gety()<=(-1.8+tank.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(tank.getx()+tank.w))&&(arr[i].getx()>=(tank.getx()-tank.w))){
 
-                    // GAME OVER CONDITION
+                // GAME OVER CONDITION
                 }
                 }*/
                 if((arr[i].gety()<=(-1.8+red_basket.w))&&(arr[i].gety()>=(-1.8))){                    if((arr[i].getx()<=(red_basket.getx()+red_basket.w))&&(arr[i].getx()>=(red_basket.getx()-red_basket.w))){
@@ -465,8 +492,8 @@ void handleKeypress1(unsigned char key, int x, int y) {
         move_object = 3;
     if(key == 32){
         if(timectr>1000){
-        addbeam();
-        timectr = 0;
+            addbeam();
+            timectr = 0;
         }
     }
 }
@@ -478,42 +505,42 @@ void handleKeypress2(int key, int x, int y) {
             int i;
             for(i=0;i<num;i++){
                 if((arr[i].flag==1)&&(arr[i].getx()<tank.getx())){
-                if((tank.getx()-tank_velx)<arr[i].getx()){
-                    flag = 0;
-                    break;
-                }
+                    if((tank.getx()-tank_velx)<arr[i].getx()){
+                        flag = 0;
+                        break;
+                    }
                 }
             }
             if(flag)
-            tank.update(-tank_velx,tank_vely);
+                tank.update(-tank_velx,tank_vely);
         }
         else if(move_object==1){
             int flag = 1;
             int i;
             for(i=0;i<num;i++){
                 if((arr[i].flag==1)&&(arr[i].getx()<gr_basket.getx())){
-                if((gr_basket.getx()-basket_velx)<arr[i].getx()){
-                    flag = 0;
-                    break;
-                }
+                    if((gr_basket.getx()-basket_velx)<arr[i].getx()){
+                        flag = 0;
+                        break;
+                    }
                 }
             }
             if(flag)
-            gr_basket.update(-basket_velx, basket_vely);
+                gr_basket.update(-basket_velx, basket_vely);
         }
         else if(move_object==2){
             int flag = 1;
             int i;
             for(i=0;i<num;i++){
                 if((arr[i].flag==1)&&(arr[i].getx()<red_basket.getx())){
-                if((red_basket.getx()-basket_velx)<arr[i].getx()){
-                    flag = 0;
-                    break;
-                }
+                    if((red_basket.getx()-basket_velx)<arr[i].getx()){
+                        flag = 0;
+                        break;
+                    }
                 }
             }
             if(flag)
-            red_basket.update(-basket_velx,basket_vely);
+                red_basket.update(-basket_velx,basket_vely);
         }
     }
     if (key == GLUT_KEY_RIGHT){
@@ -522,42 +549,42 @@ void handleKeypress2(int key, int x, int y) {
             int i;
             for(i=0;i<num;i++){
                 if((arr[i].flag==1)&&(arr[i].getx()>tank.getx())){
-                if((tank.getx()+tank_velx)>arr[i].getx()){
-                    flag = 0;
-                    break;
-                }
+                    if((tank.getx()+tank_velx)>arr[i].getx()){
+                        flag = 0;
+                        break;
+                    }
                 }
             }
             if(flag)
-            tank.update(tank_velx,tank_vely);
+                tank.update(tank_velx,tank_vely);
         }
         else if(move_object==1){
             int flag = 1;
             int i;
             for(i=0;i<num;i++){
                 if((arr[i].flag==1)&&(arr[i].getx()>gr_basket.getx())){
-                if((gr_basket.getx()+basket_velx)>arr[i].getx()){
-                    flag = 0;
-                    break;
-                }
+                    if((gr_basket.getx()+basket_velx)>arr[i].getx()){
+                        flag = 0;
+                        break;
+                    }
                 }
             }
             if(flag)
-            gr_basket.update(basket_velx, basket_vely);
+                gr_basket.update(basket_velx, basket_vely);
         }
         else if(move_object==2){
             int flag = 1;
             int i;
             for(i=0;i<num;i++){
                 if((arr[i].flag==1)&&(arr[i].getx()>red_basket.getx())){
-                if((red_basket.getx()+basket_velx)>arr[i].getx()){
-                    flag = 0;
-                    break;
-                }
+                    if((red_basket.getx()+basket_velx)>arr[i].getx()){
+                        flag = 0;
+                        break;
+                    }
                 }
             }
             if(flag)
-            red_basket.update(basket_velx,basket_vely);
+                red_basket.update(basket_velx,basket_vely);
         }
     }
 }
@@ -567,11 +594,11 @@ void handleMouseclick(int button, int state, int x, int y) {
     {
         if (button == GLUT_LEFT_BUTTON){
             if(theta < 90)
-            theta += 10;
+                theta += 10;
         }
         else if (button == GLUT_RIGHT_BUTTON){
             if(theta > -90)
-            theta -= 10;
+                theta -= 10;
         }
     }
 
