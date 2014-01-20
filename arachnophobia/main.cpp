@@ -24,6 +24,7 @@ void movespiders(int value);
 void movebeams(int value);
 void reflectbeams(int value);
 void firespider(int value);
+void removebeam(int value);
 void drawBox(float len);
 void initRendering();
 void handleResize(int w, int h);
@@ -78,6 +79,7 @@ int main(int argc, char **argv) {
     glutTimerFunc(10, movebeams, 0);
     glutTimerFunc(10, reflectbeams, 0);
     glutTimerFunc(10, firespider, 0);
+    glutTimerFunc(10, removebeam, 0);
 
     glutMainLoop();
     return 0;
@@ -103,25 +105,25 @@ void drawScene() {
     tank.draw();
     glColor3f(0.0f, 0.0f, 0.1f);        
     glBegin(GL_LINES);
-            glLineWidth(3.0f);
-            glVertex3f(0.0f, 0.0f, 0.0);
-            glVertex3f(0.12f, 0.0f, 0);
-            glEnd();
-            glBegin(GL_LINES);
-            glLineWidth(3.0f);
-            glVertex3f(0.12f, -0.12f, 0.0);
-            glVertex3f(0.12f, 0.12f, 0);
-            glEnd();
-            glBegin(GL_LINES);
-            glLineWidth(3.0f);
-            glVertex3f(0.0f, 0.0f, 0.0);
-            glVertex3f(-0.12f, 0.0f, 0);
-            glEnd();
-            glBegin(GL_LINES);
-            glLineWidth(3.0f);
-            glVertex3f(-0.12f, -0.12f, 0.0);
-            glVertex3f(-0.12f, 0.12f, 0);
-            glEnd();
+    glLineWidth(3.0f);
+    glVertex3f(0.0f, 0.0f, 0.0);
+    glVertex3f(0.12f, 0.0f, 0);
+    glEnd();
+    glBegin(GL_LINES);
+    glLineWidth(3.0f);
+    glVertex3f(0.12f, -0.12f, 0.0);
+    glVertex3f(0.12f, 0.12f, 0);
+    glEnd();
+    glBegin(GL_LINES);
+    glLineWidth(3.0f);
+    glVertex3f(0.0f, 0.0f, 0.0);
+    glVertex3f(-0.12f, 0.0f, 0);
+    glEnd();
+    glBegin(GL_LINES);
+    glLineWidth(3.0f);
+    glVertex3f(-0.12f, -0.12f, 0.0);
+    glVertex3f(-0.12f, 0.12f, 0);
+    glEnd();
     glPopMatrix();
 
     //Draw beam
@@ -208,20 +210,40 @@ void drawScene() {
 
 // Function to handle all calculations in the scene
 // updated evry 10 milliseconds
-
+void removebeam(int val){
+    int i;
+    for(i=0;i<beamctr;i++){
+        if(beam[i].gettanky()>box_len/2){
+                    beam.erase (beam.begin()+i);
+                    i-=1;
+                    beamctr-=1;
+        }
+    }
+    glutTimerFunc(10, removebeam, 0);
+}
 void firespider(int value){
 
     int i,j;
+    if((beamctr>0)&&(num>0)){
     for(i=0;i<beamctr;i+=1){
         for(j=0;j<num;j+=1){
-            if((beam[i].getx()<=(arr[j].getx()+arr[j].rad))&&(beam[i].getx()>=(arr[j].getx()-arr[j].rad))){
-                if(((arr[j].gety()-(beam[i].gety()+0.5f))<0.15f)&&(arr[j].gety()>beam[i].gety())){
+            
+            if(beam[i].theta == 0){
+                if((beam[i].gettankx()<=(arr[j].getx()+0.14f))&&(beam[i].gettankx()>=(arr[j].getx()-0.14f))){
+                    if(beam[i].gettanky()+0.5>arr[j].gety()){
                     arr.erase (arr.begin()+j);
                     j-=1;
                     num-=1;
+                    }
                 }
             }
+            else if(beam[i].theta > 0){
+            }
+            else{
+            
+            }
         }
+    }
     }
     glutTimerFunc(10, firespider, 0);
 }
